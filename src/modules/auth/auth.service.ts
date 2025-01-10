@@ -9,7 +9,7 @@ import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
+    private readonly userService: UserService, // Inject UserService
     private readonly jwtService: JwtService,
   ) {}
 
@@ -30,8 +30,16 @@ export class AuthService {
     throw new Error('Invalid credentials');
   }
 
+  async validateUser(username: string, password: string) {
+    const user = await this.userService.findByUsername(username);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+    return null;
+  }
+
   private generateToken(user: any) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: user.username, id: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -2,9 +2,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../user/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { Task } from './entities/task.entity';
+import { Task } from './task.entity';
 
 @Injectable()
 export class TaskService {
@@ -13,8 +14,8 @@ export class TaskService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    const task = this.taskRepository.create(createTaskDto);
+  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
+    const task = this.taskRepository.create({ ...createTaskDto, id: user.id });
     return this.taskRepository.save(task);
   }
 
@@ -22,16 +23,19 @@ export class TaskService {
     return this.taskRepository.find();
   }
 
-  async findOne(id: number): Promise<Task> {
+  async findOne(id: string): Promise<Task> {
+    // Change id type to string
     return this.taskRepository.findOne({ where: { id } });
   }
 
-  async updateTask(id: number, updateTaskDto: UpdateTaskDto): Promise<Task> {
+  async updateTask(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    // Change id type to string
     await this.taskRepository.update(id, updateTaskDto);
     return this.findOne(id);
   }
 
-  async deleteTask(id: number): Promise<void> {
+  async deleteTask(id: string): Promise<void> {
+    // Change id type to string
     await this.taskRepository.delete(id);
   }
 }
