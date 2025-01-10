@@ -1,11 +1,18 @@
 // src/modules/task/task.entity.ts
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { User } from '../user/user.entity';
 
 @Entity()
 export class Task {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;
@@ -15,4 +22,9 @@ export class Task {
 
   @ManyToOne(() => User, (user) => user.tasks)
   user: User;
+
+  @BeforeInsert()
+  generateId() {
+    this.id = uuidv4();
+  }
 }
