@@ -30,6 +30,14 @@ export class AuthService {
     throw new Error('Invalid credentials');
   }
 
+  async validateUser(username: string, password: string) {
+    const user = await this.userService.findByUsername(username);
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+    return null;
+  }
+
   private generateToken(user: any) {
     const payload = { username: user.username, sub: user.id };
     return {
