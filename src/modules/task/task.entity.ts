@@ -1,6 +1,6 @@
-// src/modules/task/entities/task.entity.ts
+// src/modules/task/task.entity.ts
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Task {
@@ -12,9 +12,6 @@ export class Task {
 
   @Column()
   description: string;
-
-  @Column()
-  status: string;
 
   @ManyToOne(() => User, (user) => user.tasks)
   user: User;
