@@ -1,4 +1,3 @@
-// src/modules/task/task.controller.ts
 import {
   Body,
   Controller,
@@ -29,19 +28,16 @@ export class TaskController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    // Change id type to string
     return this.taskService.findOne(id);
   }
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    // Change id type to string
     return this.taskService.updateTask(id, updateTaskDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    // Change id type to string
     return this.taskService.deleteTask(id);
   }
 }
