@@ -1,13 +1,19 @@
-// src/modules/user/user.entity.ts
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../task/task.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  id: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
@@ -15,4 +21,9 @@ export class User {
 
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
+
+  @BeforeInsert()
+  generateId() {
+    this.id = uuidv4();
+  }
 }
